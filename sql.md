@@ -14,105 +14,119 @@ They typically provide flexible schemas and scale horizontally. Examples of NoSQ
 ```
 ### Q. What are the different types of SQL joins? Explain each with examples
 #### (INNER) JOIN:
-```sql
+```text
 An INNER JOIN returns only the matching rows from both tables based on the join condition.
 Example:
-
+```
+```sql
 SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 INNER JOIN Orders
 ON Customers.CustomerID = Orders.CustomerID;
-
+```
+```text
 This query joins the "Customers" and "Orders" tables based on the "CustomerID" column and returns the customer name and order ID for matching records.
 ```
 #### LEFT (OUTER) JOIN:
-```sql
+```text
 A LEFT JOIN returns all rows from the left table and the matching rows from the right table. 
 If there are no matching rows in the right table, NULL values are returned.
 Example:
-
+```
+```sql
 SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 LEFT JOIN Orders
 ON Customers.CustomerID = Orders.CustomerID;
-
+```
+```text
 This query retrieves all customer names from the "Customers" table, and if there are matching orders in the "Orders" table, it also includes the order ID. 
 If there are no matching orders, the order ID is NULL.
 ```
 #### RIGHT (OUTER) JOIN:
-```sql
+```text
 A RIGHT JOIN returns all rows from the right table and the matching rows from the left table. 
 If there are no matching rows in the left table, NULL values are returned.
 Example:
-
+```
+```sql
 SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 RIGHT JOIN Orders
 ON Customers.CustomerID = Orders.CustomerID;
-
+```
+```text
 This query retrieves all order IDs from the "Orders" table, and if there are matching customers in the "Customers" table, it also includes the customer name. 
 If there are no matching customers, the customer name is NULL.
 ```
 #### FULL (OUTER) JOIN:
-```sql
+```text
 A FULL OUTER JOIN returns all rows from both tables, including both the matching and non-matching rows. 
 If there is no match, NULL values are returned for the columns of the opposite table.
 Example:
-
+```
+```sql
 SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 FULL OUTER JOIN Orders
 ON Customers.CustomerID = Orders.CustomerID;
-
+```
+```text
 This query retrieves all customer names and order IDs from both the "Customers" and "Orders" tables. 
 It includes all matching records, as well as non-matching records from either table, with NULL values for the non-matching columns.
 ```
 #### CROSS JOIN (or Cartesian Join):
-```sql
+```text
 A CROSS JOIN returns the Cartesian product of the two tables, resulting in a combination of every row from the first table with every row from the second table.
 Example:
-
+```
+```sql
 SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 CROSS JOIN Orders;
-
+```
+```text
 This query combines every customer name from the "Customers" table with every order ID from the "Orders" table, resulting in all possible combinations.
 ```
 #### SELF JOIN:
-```sql
+```text
 A SELF JOIN is a type of join where a table is joined with itself. 
 It allows you to combine rows within a single table based on a specified condition.
 Example:
-
+```
+```sql
 SELECT e.EmployeeName, m.EmployeeName AS ManagerName
 FROM Employees e
 JOIN Employees m ON e.ManagerID = m.EmployeeID;
-
+```
+```text
 In this example, the "Employees" table is joined with itself based on the "ManagerID" column. 
 It retrieves the employee name and their corresponding manager's name by matching the manager ID with the employee ID.
 ```
 #### NATURAL JOIN:
-```sql
+```text
 A NATURAL JOIN is a type of join that automatically matches the columns with the same names from both tables.
 It eliminates the need to specify the join condition explicitly.
 Example:
-
+```
+```sql
 SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 NATURAL JOIN Orders;
-
+```
+```text
 This query performs a natural join between the "Customers" and "Orders" tables based on the columns that have the same names in both tables. 
 The matching columns are determined automatically, and the result includes only the common columns once.
 
 NATURAL JOIN operation can be replaced with the USING clause in SQL. 
 The USING clause allows you to specify one or more columns that should be used for the join, without requiring the column names to be the same in both tables.
 Example:
-
+```
+```sql
 SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 JOIN Orders USING (CustomerID);
 ```
-
 ### Q. How would you optimize a slow-performing SQL query?
 ```text
 There are several approaches to optimize a slow-performing SQL query, such as:
@@ -276,14 +290,15 @@ In SQL, a primary key and a foreign key are two types of constraints used to est
 They play a crucial role in maintaining data integrity and enforcing referential integrity rules. Here's an explanation of each and their relationship:
 ```
 #### Primary Key:
-```sql
+```text
 A primary key is a column or a set of columns in a table that uniquely identifies each row in that table.
 It ensures that each row has a unique identifier, and no two rows can have the same primary key value.
 By default, primary keys also enforce the constraint of not allowing NULL values.
 A primary key is typically defined when creating a table, using the PRIMARY KEY constraint.
 Only one primary key can be defined per table.
 Examples:
-
+```
+```sql
 CREATE TABLE Customers (
   CustomerID INT PRIMARY KEY,
   CustomerName VARCHAR(50),
@@ -291,13 +306,14 @@ CREATE TABLE Customers (
 );
 ```
 #### Foreign Key:
-```sql
+```text
 A foreign key is a column or a set of columns in a table that refers to the primary key of another table.
 It establishes a link or relationship between two tables, allowing data integrity and enforcing referential integrity rules.
 A foreign key constraint ensures that values in the foreign key column(s) of one table match the values in the primary key column(s) of the referenced table or are NULL.
 Foreign keys help maintain data consistency and enable the creation of relationships between tables in a relational database.
 Examples:
-
+```
+```sql
 CREATE TABLE Orders (
   OrderID INT PRIMARY KEY,
   CustomerID INT,
@@ -307,7 +323,7 @@ CREATE TABLE Orders (
 );
 ```
 ### Relationship between Primary Key and Foreign Key:
-
+```text
 The relationship between a primary key and a foreign key is established when the foreign key column(s) reference the primary key column(s) of another table.
 This relationship allows you to link related data across tables, representing associations and dependencies between entities.
 The primary key of the referenced table becomes the target for the foreign key constraint in the referencing table.
@@ -344,38 +360,42 @@ They require additional storage space compared to B-tree or hash indexes due to 
 ```
 ### Q. How would you handle duplicate records in a SQL query result?
 #### Use DISTINCT keyword:
-```sql
+```text
 The DISTINCT keyword is used in the SELECT statement to eliminate duplicate rows from the query result.
 By specifying DISTINCT, only unique records are returned, and duplicates are removed.
 Example:
-
+```
+```sql
 SELECT DISTINCT column1, column2, ...
 FROM table_name;
 ```
 #### Use GROUP BY:
+```text
 The GROUP BY clause groups the rows in the query result based on one or more columns.
 This can be useful when you want to perform aggregate functions on duplicate records or collapse them into a single row.
 Example:
-
+```
 ```sql
 SELECT column1, column2, aggregate_function(column3)
 FROM table_name
 GROUP BY column1, column2;
 ```
 #### Use aggregate functions:
-```sql
+```text
 By using aggregate functions such as COUNT, SUM, AVG, etc., you can calculate values based on duplicate records and get aggregated results.
 Example:
-
+```
+```sql
 SELECT column1, COUNT(*)
 FROM table_name
 GROUP BY column1;
 ```
 #### Use ROW_NUMBER() function:
+```text
 The ROW_NUMBER() function assigns a unique sequential number to each row in the query result.
 You can use it along with a subquery or a common table expression (CTE) to filter out duplicates based on the row number.
 Example:
-
+```
 ```sql
 WITH cte AS (
   SELECT column1, column2, ROW_NUMBER() OVER (PARTITION BY column1 ORDER BY column2) AS row_num
@@ -403,11 +423,13 @@ Consider a table called "Orders" that contains information about customer orders
     5	    102	     Orange	1
 
 To calculate the total quantity of products ordered by each customer, you can use the GROUP BY clause along with the SUM() function:
-
+```
+```sql
 SELECT CustomerID, SUM(Quantity) AS TotalQuantity
 FROM Orders
 GROUP BY CustomerID;
-
+```
+```text
 The result of this query will group the rows based on the "CustomerID" column and calculate the sum of the "Quantity" column for each customer:
 
 CustomerID|TotalQuantity|
@@ -423,59 +445,66 @@ The GROUP BY clause is not limited to a single column. You can group by multiple
 ```
 ### Q. What are some common aggregate functions in SQL? Provide examples of each.
 #### COUNT():
-```sql
+```text
 Returns the number of rows in a group or the total number of rows in a table.
 Example:
-
+```
+```sql
 SELECT COUNT(*) AS TotalOrders
 FROM Orders;
 ```
 #### SUM(): 
-```sql
+```text
 Calculates the sum of a numeric column within a group or across the entire table.
 Example:
-
+```
+```sql
 SELECT SUM(Quantity) AS TotalQuantity
 FROM Orders;
 ```
 #### AVG(): 
-```sql
+```text
 Calculates the average value of a numeric column within a group or across the entire table.
 Example:
-
+```
+```sql
 SELECT AVG(Price) AS AveragePrice
 FROM Products;
 ```
 #### MAX():
-```sql
+```text
 Retrieves the maximum value of a column within a group or across the entire table.
 Example:
-
+```
+```sql
 SELECT MAX(Revenue) AS MaxRevenue
 FROM Sales;
 ```
 #### MIN():
-```sql
+```text
 Retrieves the minimum value of a column within a group or across the entire table.
 Example:
-
+```
+```sql
 SELECT MIN(Price) AS MinPrice
 FROM Products;
 ```
 #### GROUP_CONCAT():
-```sql
+```text
 Concatenates values from multiple rows into a single string, optionally grouped by a column.
 Example:
-
+```
+```sql
 SELECT CustomerID, GROUP_CONCAT(ProductName SEPARATOR ', ') AS ProductsOrdered
 FROM Orders
 GROUP BY CustomerID;
 ```
 #### HAVING: 
-```sql
+```text
 Specifies a condition for filtering groups based on aggregate function results.
 Example:
-
+```
+```sql
 SELECT CustomerID, SUM(Quantity) AS TotalQuantity
 FROM Orders
 GROUP BY CustomerID
@@ -487,39 +516,42 @@ Handling NULL values in a SQL query requires consideration of how you want to tr
 Here are some common approaches to handle NULL values in a SQL query:
 ```
 #### Filtering NULL values:
-```sql
+```text
 Use the WHERE clause to exclude NULL values from the result set by specifying a condition that filters out NULLs.
 Example:
-
+```
+```sql
 SELECT column1, column2
 FROM table_name
 WHERE column1 IS NOT NULL;
 Handling NULL with IFNULL or COALESCE:
 ```
 #### IFNULL() or COALESCE():
-```sql
+```text
 Use the IFNULL() or COALESCE() function to replace NULL values with a specific value or expression.
 Example:
-
+```
+```sql
 SELECT column1, IFNULL(column2, 'N/A') AS column2_replaced
 FROM table_name;
 ```
-
 #### Handling NULL with CASE statement:
-```sql
+```text
 Use the CASE statement to conditionally handle NULL values and provide alternative values or perform specific logic.
 Example:
-
+```
+```sql
 SELECT column1, CASE WHEN column2 IS NULL THEN 'N/A' ELSE column2 END AS column2_handled
 FROM table_name;
 ```
 #### Aggregating NULL values:
-```sql
+```text
 When using aggregate functions like SUM(), COUNT(), AVG(), etc.
 NULL values are often ignored by default, resulting in calculations based on non-NULL values only.
 If you want to include NULL values in your calculations, you can use the IFNULL(), COALESCE(), or CASE statement within the aggregate function to substitute NULL with a desired value.
 Example:
-
+```
+```sql
 SELECT SUM(IFNULL(column1, 0)) AS total_sum
 FROM table_name;
 ```
