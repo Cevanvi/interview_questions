@@ -454,7 +454,7 @@ CREATE TABLE Orders (
 );
 ```
 ## Relationship between Primary Key and Foreign Key:
-```text
+
 The relationship between a primary key and a foreign key is established when the foreign key column(s) 
 reference the primary key column(s) of another table.
 This relationship allows you to link related data across tables, representing associations 
@@ -469,8 +469,7 @@ the primary key "CustomerID" in the "Customers" table.
 In summary, a primary key uniquely identifies each row in a table, while a foreign key establishes 
 a relationship between two tables by referencing the primary key of another table. 
 The primary key is the source of the reference, and the foreign key is the target that points back to the primary key. 
-Together, they ensure data integrity and maintain relationships between tables in a relational database.
-```
+
 ## Q. What's the difference between B-tree, hash, and bitmap indexes 
 ```text
 B-tree Index:
