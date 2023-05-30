@@ -506,3 +506,95 @@ Here are the key differences between OLAP and OLTP databases:
 * OLTP databases handle concurrent transactions, ensuring data integrity and managing concurrent access, while OLAP databases may have fewer concurrency requirements as they focus on analytical processing.
 ###  Database Size: 
 * OLTP databases tend to have smaller database sizes due to the frequent transactional updates, while OLAP databases can handle much larger data volumes for historical or consolidated analysis.
+## Q. Explain the concept of ACID properties in the context of database transactions.
+ACID is an acronym that stands for Atomicity, Consistency, Isolation, and Durability. These properties ensure the reliability and integrity of database transactions. Let's explore each of these properties in the context of database transactions:
+### Atomicity: 
+Atomicity guarantees that a transaction is treated as a single, indivisible unit of work. It ensures that either all the operations within a transaction are successfully completed, or none of them are applied to the database. If any part of a transaction fails, the entire transaction is rolled back, and the database is left unchanged. Atomicity maintains data consistency and integrity by preventing incomplete or partially applied transactions.
+### Consistency:
+Consistency ensures that a transaction brings the database from one valid state to another valid state. The database must satisfy predefined integrity constraints, data validations, and rules during and after a transaction. If a transaction violates any of these constraints, the changes made by the transaction are rolled back, and the database remains in its previous consistent state. Consistency ensures that the data remains valid and coherent throughout the transaction process.
+### Isolation:
+Isolation guarantees that concurrent transactions do not interfere with each other, even when executed simultaneously. 
+Each transaction appears to execute in isolation, as if it were the only transaction being executed, despite the presence of other concurrent transactions. 
+Isolation prevents data inconsistencies and conflicts caused by concurrent access and ensures that each transaction sees a consistent snapshot of the database. 
+Isolation is maintained by mechanisms such as locks, concurrency control protocols, and transaction isolation levels.
+
+There are different levels of isolation provided by database systems, often referred to as isolation levels. 
+Each isolation level offers a different trade-off between data integrity, concurrency, and performance.
+    
+*  Read Uncommitted (Level 0): 
+    In this isolation level, transactions can read uncommitted data from other concurrent transactions. 
+    It **allows dirty reads**, meaning a transaction can see uncommitted changes made by another transaction. 
+    The problem with this isolation level is that it can lead to inconsistent data, as uncommitted changes may be rolled back later, causing data integrity issues.
+* Read Committed (Level 1): 
+    In this isolation level, a transaction can only read committed data from other transactions. 
+    It ensures that any data read by a transaction is consistent and stable. 
+    However, it can result in **non-repeatable reads** and **phantom reads**. 
+
+    **Non-repeatable** reads occur when a transaction reads the same data multiple times but gets different values due to other committed transactions modifying the data. 
+    
+    **Phantom reads** occur when a transaction executes a query multiple times but gets different sets of rows due to other committed transactions inserting or deleting rows.
+* Repeatable Read (Level 2): 
+    This isolation level guarantees that within a transaction, the same query will always return the same result set, even if other transactions modify or insert data. 
+    It prevents non-repeatable reads but can still lead to **phantom reads**. 
+    **Phantom reads** occur when a transaction re-executes a query and sees new rows that were inserted by other committed transactions.
+* Serializable (Level 3): 
+    This is the highest isolation level, ensuring the strictest data consistency and integrity. 
+    It provides full isolation, preventing all concurrency-related anomalies, including dirty reads, non-repeatable reads, and phantom reads. 
+    Serializable isolation achieves this by using locks or other mechanisms to ensure that no other transaction can modify the data that a transaction is reading or modifying. 
+    However, this level of isolation can impact concurrency and may result in performance degradation in highly concurrent environments.
+
+
+### Durability:
+Durability ensures that once a transaction is committed and changes are successfully written to the database, they will persist even in the event of system failures, crashes, or power outages. The changes made by a committed transaction become permanent and are stored in non-volatile storage. This is typically achieved through techniques like write-ahead logging and transaction journaling. Durability guarantees that the database can recover its state to the last committed point and that the committed data is not lost.
+
+There's a real-life example that illustrates the importance of ACID properties in database transactions:
+
+Hotel Reservation: 
+
+When a customer books a hotel room, a transaction is executed to reserve the room and deduct the payment. 
+**Atomicity** ensures that if any part of the transaction fails, such as a network interruption, the reservation is rolled back,
+maintaining data consistency.
+
+**Durability** ensures that the reservation remains intact even if there is a power outage or database failure, 
+allowing the customer to access the reserved room upon arrival.
+
+## Q. What Is CAP Theorem ?
+The CAP acronym of: Consistency & Availability & Partition.
+The CAP Theorem says that it is impossible to build an implementation of read-write storage/system in an asynchronous network that satisfies all of the following three properties:
+* Consistency (all nodes see the same data even at the same time with concurrent updates )
+* Availability (a guarantee that every request receives a response about whether it was successful or failed)
+* Partition tolerance (the system continues to operate despite arbitrary message loss or failure of part of the system)
+## Q. What are C, A and P in CAP and the difference between them?
+* Consistency means that data is the same across the cluster, so you can read or write from/to any node and get the same data.
+* Availability means the ability to access the cluster even if a node in the cluster goes down.
+* Partition tolerance means that the cluster continues to function even if there is a "partition" (communication break) between two nodes (both nodes are up, but can't communicate).
+
+If you have both **availability** (the cluster doesn't go down) and **partition tolerance** (the database can survive nodes being unable to communicate), then you can't guarantee that all nodes will always have all the data (**consistency**), 
+because nodes are up and accepting writes, but can't communicate those writes to each other.
+## Q. What Is PACELC Theorem ?
+The PACELC theorem is an extension of the CAP theorem that introduces the concept of latency and trade-offs in distributed systems. 
+It takes into account the behavior of distributed systems during network partitions, emphasizing the role of latency in decision-making.
+PACELC stands for:
+
+* Partition tolerance (P): 
+This remains the same as in the CAP theorem. 
+It refers to the system's ability to continue functioning despite network partitions or communication failures.
+
+* Availability (A): 
+Similar to the CAP theorem, availability in PACELC refers to the system's ability to provide a response to every request, even in the presence of failures or partitions.
+
+* Consistency (C): 
+Consistency in PACELC refers to the system's ability to maintain a consistent view of data. 
+However, unlike in the CAP theorem, PACELC acknowledges that achieving strong consistency across a distributed system may introduce higher latency or compromise availability.
+
+* Latency (E): 
+Latency represents the time it takes for a request to be processed and receive a response. 
+PACELC recognizes that in distributed systems, achieving low latency is crucial for providing a responsive user experience.
+
+* Consistency-availability trade-off (LC): 
+PACELC introduces the concept of a trade-off between consistency and availability in the presence of network partitions. 
+It recognizes that during a partition, a system can choose to prioritize either strong consistency (at the cost of availability) or high availability (at the cost of strong consistency).
+
+The PACELC theorem acknowledges that in distributed systems, there is a fundamental trade-off between providing strong consistency and high availability, particularly during network partitions. 
+It highlights the importance of considering latency as a factor in decision-making, as achieving strong consistency across a distributed system may introduce higher latency or compromise availability. 
+Different systems and use cases may prioritize different aspects of the PACELC theorem based on their specific requirements and desired trade-offs.
