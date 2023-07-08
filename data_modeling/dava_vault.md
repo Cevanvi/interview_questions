@@ -90,36 +90,45 @@ WHERE SP.Name = 'Apple';
 ### Cons
 
 1. **Scalability**: 
+
 Data Vault is designed to be highly scalable, so it can handle small to very large amounts of data efficiently.
 
 2. **Flexibility**: 
+
 Data Vault architecture allows for easy adaptation to changes in business requirements, making it future-proof.
 
 3. **Auditability and Compliance**: 
+
 Data Vault retains all historical data and can track changes over time, which is beneficial for audit trails and compliance with regulations.
 
 4. **Parallel Loading**: 
+
 Data Vault allows for parallel loading of data into Hubs, Links, and Satellites, improving performance.
 
 ### Pros
 
 1. **Complexity**: 
+
 Data Vault modeling is more complex compared to traditional Star or Snowflake schemas. 
 It requires a deeper understanding to design, implement and maintain. 
 This complexity can lead to longer development times and require more skilled (and potentially more expensive) resources.
 
 2. **Performance**:
+
 Because of its complexity and the number of joins required to answer a query, Data Vault can suffer from performance issues, particularly when dealing with large datasets. 
 To mitigate this, Data Marts or other reporting structures are often built on top of the Data Vault.
 
 3. **Documentation** and Tooling: 
+
 There are fewer resources, tools, and established standards for implementing and working with Data Vault models compared to more traditional approaches.
 
 4. **Less Intuitive for Business Users**: 
+
 The structure of a Data Vault model can be less intuitive for business users and analysts who are used to dealing with Star and Snowflake schemas.
 This means additional training or resources may be required to help these users understand and interact with the system.
 
 5. **Data Redundancy**: 
+
 Data Vault can lead to data redundancy due to its design of retaining all the historical data. 
 This might result in higher storage costs.
 
@@ -132,19 +141,24 @@ The aim of Data Vault 2.0 is to overcome some limitations of Data Vault 1.0 and 
 Here are some of the main enhancements in Data Vault 2.0:
 
 1. **Inclusion of NoSQL and unstructured data**:
+
 Data Vault 2.0 incorporates techniques to handle NoSQL and unstructured data, which is important in the era of big data.
 
 2. **Real-time data loading**: 
+
 Data Vault 2.0 introduces concepts for real-time, near-real-time, and streaming data loads.
 
 3. **New Data Vault modeling constructs**:
+
 Data Vault 2.0 introduces new types of entities, like the Point-in-Time (PIT) and Bridge tables, to improve performance and querying.
 
 4. **Hash keys**: 
+
 Data Vault 2.0 recommends the use of hash keys for the business keys in Hub tables and the relationships in Link tables to improve join performance.
 
 5. **Enforcement of standards**:
-6. Data Vault 2.0 places a heavy emphasis on standards, documentation, and metadata to ensure consistency and quality.
+
+Data Vault 2.0 places a heavy emphasis on standards, documentation, and metadata to ensure consistency and quality.
 
 Let's look at an example of a Data Vault 2.0 architecture:
 
