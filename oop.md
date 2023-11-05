@@ -5,13 +5,146 @@ Object-Oriented Programming (OOP) is a programming paradigm that uses objects an
 The four basic principles of OOP are encapsulation, inheritance, polymorphism, and abstraction.
 
 1. **Encapsulation**: Encapsulation is often referred to as "data hiding". It's a mechanism where the data and the code that manipulates the data are bound together and are kept safe from outside interference and misuse. In simple terms, it's about hiding complex details and only exposing the necessary parts. For example, when using a coffee machine, you don't need to know the internal workings of every part (like how water is heated), you just need to know how to use its interface (buttons and levers).
+```python
+# Define a class named MyClass
+class MyClass:
+    # Constructor method that initializes the class object
+    def __init__(self):
+        # Define a protected variable with an initial value of 10
+        # The variable name starts with a single underscore, which indicates protected access
+        self._protected_var = 10
 
+        # Define a private variable with an initial value of 20
+        # The variable name starts with two underscores, which indicates private access
+        self.__private_var = 20
+
+# Create an object of MyClass class
+obj = MyClass()
+# Access the protected variable using the object name and print its value
+# The protected variable can be accessed outside the class but
+# it is intended to be used within the class or its subclasses
+print(obj._protected_var)   # output: 10
+# Try to access the private variable using the object name and print its value
+# The private variable cannot be accessed outside the class, even by its subclasses
+# This will raise an AttributeError because the variable is not accessible outside the class
+print(obj.__private_var)    # AttributeError: 'MyClass' object has no attribute '__private_var'
+```
 2. **Inheritance**: Inheritance is a feature that allows a class (child class or derived class) to inherit properties from another class (parent class or base class). These properties can be methods, data, or attributes. For instance, if we have a class 'Vehicle' with properties like 'speed' and 'size', and we have another class 'Car', the 'Car' class can inherit the properties of the 'Vehicle' class. This facilitates code reusability and reducing redundancy.
+```python
+# Define a class named Animal
+class Animal:
 
+    # Constructor method that initializes the class object with a name attribute
+    def __init__(self, name):
+        self.name = name
+
+    # Method that is defined in the Animal class but does not have a body
+    # This method will be overridden in the subclasses of Animal
+    def speak(self):
+        print("")
+
+# Define a subclass named Dog that inherits from the Animal class
+class Dog(Animal):
+
+    # Override the speak method of the Animal class
+    def speak(self):
+        print("Woof!")
+
+# Define a subclass named Cat that inherits from the Animal class
+class Cat(Animal):
+
+    # Override the speak method of the Animal class
+    def speak(self):
+        print("Meow!")
+
+# Create a Dog object with a name attribute "Rover"
+dog = Dog("Rover")
+# Create a Cat object with a name attribute "Whiskers"
+cat = Cat("Whiskers")
+# Call the speak method of the Dog class and print the output
+# The speak method of the Dog class overrides the speak method of the Animal class
+# Therefore, when we call the speak method of the Dog object, it will print "Woof!"
+dog.speak()   # output: Woof!
+# Call the speak method of the Cat class and print the output
+# The speak method of the Cat class overrides the speak method of the Animal class
+# Therefore, when we call the speak method of the Cat object, it will print "Meow!"
+cat.speak()   # output: Meow!
+```
 3. **Polymorphism**: Polymorphism, derived from Greek words "poly" (many) and "morph" (forms), allows us to perform a single action in different ways. Consider an example of a 'Shape' class with a method 'draw()'. We might have multiple child classes like 'Rectangle', 'Circle', etc. These child classes will inherit the 'Shape' class and possibly override the 'draw()' method to provide their own implementation. So, the 'draw()' method will behave differently for each child class. That's polymorphism.
+```python
+#The Shape class is defined with an abstract area method, which is intended to be overridden by subclasses.
+class Shape:
+    def area(self):
+        pass
 
+class Rectangle(Shape):
+    # The Rectangle class is defined with an __init__ method that initializes
+    # width and height instance variables.
+    # It also defines an area method that calculates and returns
+    # the area of a rectangle using the width and height instance variables.
+    def __init__(self, width, height):
+        self.width = width  # Initialize width instance variable
+        self.height = height  # Initialize height instance variable
+
+    def area(self):
+        return self.width * self.height  # Return area of rectangle
+
+
+ # The Circle class is defined with an __init__ method
+ # that initializes a radius instance variable.
+ # It also defines an area method that calculates and
+ # returns the area of a circle using the radius instance variable.
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius  # Initialize radius instance variable
+
+    def area(self):
+        return 3.14 * self.radius ** 2  # Return area of circle using pi * r^2
+
+# The shapes list is created with one Rectangle object and one Circle object. The for
+# loop iterates over each object in the list and calls the area method of each object
+# The output will be the area of the rectangle (20) and the area of the circle (153.86).
+shapes = [Rectangle(4, 5), Circle(7)]  # Create a list of Shape objects
+for shape in shapes:
+    print(shape.area())  # Output the area of each Shape object
+```
 4. **Abstraction**: Abstraction is the principle of simplifying complex reality by modeling classes appropriate to the problem, and working at the most appropriate level of inheritance for a given aspect of the problem. In other words, it's about creating a simple interface that works at a high level of complexity. This can be achieved in many ways including patterns, conventions, and a simple-to-understand UI. For instance, when driving a car, you don't need to understand the complexities of the internal combustion engine. You just need to know how to interact with the car's controls (steering wheel, pedals, and gauges). That's abstraction.
+```python
+# Import the abc module to define abstract classes and methods
+from abc import ABC, abstractmethod
 
+# Define an abstract class called Shape that has an abstract method called area
+class Shape(ABC):
+    @abstractmethod
+    def area(self):
+        pass
+
+# Define a Rectangle class that inherits from Shape
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    # Implement the area method for Rectangles
+    def area(self):
+        return self.width * self.height
+
+# Define a Circle class that also inherits from Shape
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
+
+    # Implement the area method for Circles
+    def area(self):
+        return 3.14 * self.radius ** 2
+
+# Create a list of shapes that includes both Rectangles and Circles
+shapes = [Rectangle(4, 5), Circle(7)]
+
+# Loop through each shape in the list and print its area
+for shape in shapes:
+    print(shape.area())
+```
 ## Q. What is the difference between overloading and overriding?
 Overloading is when two or more methods in the same class have the same name but different parameters. Overriding is when a child class has the same method as a parent class.
 
