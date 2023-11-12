@@ -1,3 +1,114 @@
+# What's the Spark Hierarchy?
+Apache Spark's architecture is based on a master/worker hierarchy.
+
+1. **Driver Program (Master Node):** 
+    This is the program that declares the transformations and actions on data and submits such requests to the cluster.
+    The driver program contains the main() function of the application.
+    The driver program also creates a SparkContext which coordinates and monitors the execution of tasks.
+
+
+2. **SparkContext:** 
+    This is the heart of any spark functionality. 
+    It establishes a connection to the Spark execution environment.
+    It coordinates and monitors the execution of tasks.
+    The SparkContext can be used to create resilient distributed datasets (RDDs), accumulators and broadcast variables on the cluster.
+
+
+3. **Cluster Manager:** It can be a standalone manager (comes with Spark out of the box), or a Mesos or YARN manager.
+    The role of the cluster manager is to negotiate resources between the driver program and the executor nodes.
+
+
+4. **Executors:** 
+    Executors are worker nodes' processes in charge of running individual tasks in a given Spark job.
+    They run tasks that make up the application and return results to the driver node.
+    They provide in-memory storage for RDDs that are cached by user programs through Block Manager.
+
+
+5. **Tasks:** 
+    Tasks are the smallest unit of work sent out to the executor.
+    A task applies its dataset's transformations to a partition of the data, and it sends the results to the driver program or saves it to an external storage system.
+
+
+6. **RDD (Resilient Distributed Dataset):** 
+     This is a fundamental data structure of Spark.
+     It is an immutable distributed collection of objects.
+     Each dataset in RDD is divided into logical partitions, which may be computed on different nodes of the cluster.
+     RDDs can contain any type of Python, Java, or Scala objects, including user-defined classes.
+
+
+7. **DataFrame/Dataset:**
+    These are distributed collections of data organized into named columns.
+    They are designed to make large data sets processing even easier.
+    The main difference between RDD and Datasets is that Datasets are organized into named columns with a known schema, enabling Spark to run certain optimizations on the finalized query.
+
+
+8. **SparkSession:** 
+   In Spark 2.0 and onwards, SparkSession provides a single point of entry to interact with underlying Spark functionality and allows programming Spark with DataFrame and Dataset APIs.
+   A SparkSession can be used create DataFrame, register DataFrame as tables, execute SQL over tables, cache tables, and read parquet files.
+
+![Spark Hierarchy](./images/spark-hierarchy.png)
+
+# How do you optimize a spark job?
+
+1. **Identify the problem first.**
+    - Navigate to the Spark UI and examine the stages sorted by duration. Investigate the longest running stage.
+    - Look out for any data spills to disk. Note that spills occur only during data shuffling such as during a join operation etc.
+    - Review your physical query plan (the one executed by Spark). This can be done via `df.explain()`. Remember to read the plan from bottom to top.
+  
+
+2. **Examine a key aspect: data scanning using HIVE partitions.**
+    - Check whether the table is partitioned efficiently. Ensure your query uses partitioned columns.
+    - Optimizing data scanning is often a good starting point for performance improvement. If there's an issue here, fix it first.
+
+
+3. **Analyze the query.**
+    - Continue checking the query plan and the SQL tab on the WEB UI to identify potential bottlenecks.
+    - In the SQL Tab, the term 'EXCHANGE' means shuffling!. Needs to be minimized!
+
+
+4. **Consider using CACHE / PERSIST.**
+    - If a data frame (df) is frequently used, consider using CACHE or PERSIST. But, make sure to use 'unpersist' when necessary.
+
+
+5. **Examine tasks in the Spark UI.**
+    - Look for any data skew in the problematic or long-running tasks. This can be measured by checking the disparity between the 75th percentile and maximum values. 
+      If there is a big difference for data amount between 75th percentile and maximum, then you have data skew problem.
+
+
+6. **Consider using a broadcast join, but cautiously.**
+     - Use broadcast join if it is applicable. However, use this very carefully! Because in broadcasting, data is 
+       moved to driver and not compressed anymore. So, 2GB of data might end up 100GB. (it is very good idea to verify
+       the size of dataframe and check with the spark configuration for broadcast data amount. It has to be smaller than
+       configured value. Otherwise, you have a problem)
+
+
+7. **Limit the use of User-Defined Functions (UDFs).**
+    - UDFs can slow down your job. If they're unavoidable, run performance tests to measure their impact.
+
+
+8. **Avoid unnecessary actions.**
+    - Reduce operations like count() where possible.
+
+
+9. **Optimize distinct data operations.**
+    - If you need distinct data, drop duplicates before joining. This reduces data shuffle during joins.
+
+
+10. **Understand your hardware utilization.**
+    - Use Ganglia to monitor CPU usage. Aim for high utilization (ideally to the point of saturation), 
+      but for production workloads, aim for at least 70% utilization to accommodate data growth.
+
+**Some concepts to keep in mind:**
+- Reading data (table, etc.) is not an action until an action is called. However, Spark creates a small action to check metadata.
+- The "ColumnarToRow" operation in the SQL Tab is for converting columnar data (orc, parquet) to rows for the application.
+- Catalyst Optimizer finds the most efficient way to execute the query.
+- There are two types of transformations in Spark:
+  - **Narrow Transformations:** These do not involve SHUFFLING. Examples include adding a new column, filtering, altering a column, and selecting a column.
+  - **Wide Transformations:** These involve SHUFFLING. Examples include repartition and coalesce operations, joins, and groupBy.
+
+When writing data, if you don't actually want to write the data but want to execute it, use `df.write.format("noop")`. The "noop" command will not write the data, e.g., to S3.
+
+
 ### Q. Explain the key features of Spark and how PySpark leverages them.
 
 -  Distributed Processing:
