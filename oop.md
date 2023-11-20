@@ -10,7 +10,7 @@
 - [What is Association / Double Association in OOP? Can you provide an example?](#q-what-is-association--double-association-in-oop-can-you-provide-an-example)
 
 Design Patterns:
-- [What is The Factory Design Pattern?](oo_design_patterns%2Fcreational_patterns%2Ffactory_method.md)
+- [What is The Factory Design Pattern?](oo_design_patterns%2Fcreational_patterns%2Ffactory.md)
 
 
 ## Q. What is Object-Oriented Programming (OOP)?
