@@ -1,3 +1,18 @@
+- [What is Object-Oriented Programming (OOP)?](#q-what-is-object-oriented-programming-oop)
+- [Can you explain the four basic principles of OOP?](#q-can-you-explain-the-four-basic-principles-of-oop)
+- [What is the difference between overloading and overriding?](#q-what-is-the-difference-between-overloading-and-overriding)
+- [What is an abstract class, and how is it different from an interface?](#q-what-is-an-abstract-class-and-how-is-it-different-from-an-interface)
+- [What is a class and what is an object in OOP?](#q-what-is-a-class-and-what-is-an-object-in-oop)
+- [What is a constructor in OOP?](#q-what-is-a-constructor-in-oop)
+- [What is the SOLID principle in OOP? Explain each of the SOLID principles?](#q-what-is-the-solid-principle-in-oop-explain-each-of-the-solid-principles)
+- [What is Aggregation in OOP? Can you provide an example?](#q-what-is-aggregation-in-oop-can-you-provide-an-example)
+- [What is Composition in OOP? Can you provide an example?](#q-what-is-composition-in-oop-can-you-provide-an-example)
+- [What is Association / Double Association in OOP? Can you provide an example?](#q-what-is-association--double-association-in-oop-can-you-provide-an-example)
+
+Design Patterns:
+- [What is The Factory Design Pattern?](oo_design_patterns%2Fcreational_patterns%2Ffactory_method.md)
+
+
 ## Q. What is Object-Oriented Programming (OOP)?
 Object-Oriented Programming (OOP) is a programming paradigm that uses objects and classes, which allows for more robust, flexible and manageable code.
 
@@ -157,7 +172,7 @@ A class is a blueprint for creating objects. An object is an instance of a class
 ## Q. What is a constructor in OOP?
 A constructor in OOP is a special type of subroutine called to create an object. It prepares the new object for use, often accepting arguments that the constructor uses to set any member variables required when the object is first created.
 
-## Q.   What is the SOLID principle in OOP? Explain each of the SOLID principles?
+## Q. What is the SOLID principle in OOP? Explain each of the SOLID principles?
 SOLID is an acronym for the first five object-oriented design principles by Robert C. Martin. 
 These principles make it easier to develop software that is easy to maintain, understand, and extend.
 The SOLID principles include: 
@@ -290,7 +305,7 @@ print(student.teacher.name)  # Mr. Smith
 Double Association is when two classes are associated with each other.
 ```python
 class Customer:
-    def __init__(self, name, product : Product):
+    def __init__(self, name, product : "Product"):
         self.name = name
         self.product = product
 
