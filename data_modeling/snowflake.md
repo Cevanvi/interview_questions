@@ -1,4 +1,8 @@
-A snowflake schema is a type of data warehouse schema that is characterized by a more complex structure compared to a star schema. It is called a snowflake schema because its diagram resembles a snowflake shape when the entity-relationship model is laid out. The schema is made up of fact tables, dimension tables, and sub-dimension tables.
+# Snowflake Schema
+
+A snowflake schema is a type of data warehouse schema that is characterized by a more complex structure compared to a star schema.
+It is called a snowflake schema because its diagram resembles a snowflake shape when the entity-relationship model is laid out.
+The schema is made up of fact tables, dimension tables, and sub-dimension tables.
 
 In a snowflake schema:
 
