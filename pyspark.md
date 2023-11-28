@@ -1,4 +1,14 @@
-# What's the Spark Hierarchy?
+- [What's the Spark Hierarchy?](#q-whats-the-spark-hierarchy)
+- [How do you optimize a spark job?](#q-how-do-you-optimize-a-spark-job)
+- [Explain the key features of Spark and how PySpark leverages them](#q-explain-the-key-features-of-spark-and-how-pyspark-leverages-them)
+- [What is an RDD? What are transformations and actions in Spark?](#q-what-is-an-rdd-what-are-transformations-and-actions-in-spark)
+- [How does PySpark handle distributed data processing?](#q-how-does-pyspark-handle-distributed-data-processing)
+- [What is the difference between persist() and cache() methods in PySpark?](#q-what-is-the-difference-between-persist---and-cache---methods-in-pyspark)
+- [Explain the use of broadcast variables in PySpark.](#q-explain-the-use-of-broadcast-variables-in-pyspark)
+- [What are accumulators in PySpark and where are they typically used?](#q-what-are-accumulators-in-pyspark-and-where-are-they-typically-used)
+- [What is Data Skew? What is Salting technique to avoid data skew?](#q-what-is-data-skew-what-is-salting-technique-to-avoid-data-skew)
+---
+### Q. What's the Spark Hierarchy?
 Apache Spark's architecture is based on a master/worker hierarchy.
 
 1. **Driver Program (Master Node):** 
@@ -47,8 +57,8 @@ Apache Spark's architecture is based on a master/worker hierarchy.
    A SparkSession can be used create DataFrame, register DataFrame as tables, execute SQL over tables, cache tables, and read parquet files.
 
 ![Spark Hierarchy](./images/spark-hierarchy.png)
-
-# How do you optimize a spark job?
+---
+### Q. How do you optimize a spark job?
 
 1. **Identify the problem first.**
     - Navigate to the Spark UI and examine the stages sorted by duration. Investigate the longest running stage.
@@ -59,19 +69,22 @@ Apache Spark's architecture is based on a master/worker hierarchy.
 2. **Examine a key aspect: data scanning using HIVE partitions.**
     - Check whether the table is partitioned efficiently. Ensure your query uses partitioned columns.
     - Optimizing data scanning is often a good starting point for performance improvement. If there's an issue here, fix it first.
-
+    
 
 3. **Analyze the query.**
     - Continue checking the query plan and the SQL tab on the WEB UI to identify potential bottlenecks.
-    - In the SQL Tab, the term 'EXCHANGE' means shuffling!. Needs to be minimized!
+    - Data shuffling (the term 'EXCHANGE' in WEB UI Sql Tab) can be expensive in terms of both time and resources, as it involves redistributing data across partitions or even across nodes.
+      Operations like groupByKey can cause data shuffling. Try to use operations that minimize shuffling, like reduceByKey or aggregateByKey.
 
 
 4. **Consider using CACHE / PERSIST.**
-    - If a data frame (df) is frequently used, consider using CACHE or PERSIST. But, make sure to use 'unpersist' when necessary.
+    - If a data frame (df) is frequently used, consider using CACHE or PERSIST. But, make sure to use 'unpersist' when necessary , and don't forget that CACHE is lazy operation. 
+      so, you need to call an action to cache the data. (e.g. df.cache().count() )
 
 
 5. **Examine tasks in the Spark UI.**
-    - Look for any data skew in the problematic or long-running tasks. This can be measured by checking the disparity between the 75th percentile and maximum values. 
+    - Look for any data skew in the problematic or long-running tasks. 
+      This can be measured by checking the disparity between the 75th percentile and maximum values. 
       If there is a big difference for data amount between 75th percentile and maximum, then you have data skew problem.
 
 
@@ -98,17 +111,23 @@ Apache Spark's architecture is based on a master/worker hierarchy.
     - Use Ganglia to monitor CPU usage. Aim for high utilization (ideally to the point of saturation), 
       but for production workloads, aim for at least 70% utilization to accommodate data growth.
 
+
+11. **Use the right file format.**
+    - Different file formats and compression methods can have a great impact on performance.
+      For instance, Parquet is a columnar storage file format and is optimized for use with Spark for its superior analytic performance.
+
 **Some concepts to keep in mind:**
 - Reading data (table, etc.) is not an action until an action is called. However, Spark creates a small action to check metadata.
 - The "ColumnarToRow" operation in the SQL Tab is for converting columnar data (orc, parquet) to rows for the application.
 - Catalyst Optimizer finds the most efficient way to execute the query.
 - There are two types of transformations in Spark:
   - **Narrow Transformations:** These do not involve SHUFFLING. Examples include adding a new column, filtering, altering a column, and selecting a column.
+
   - **Wide Transformations:** These involve SHUFFLING. Examples include repartition and coalesce operations, joins, and groupBy.
 
 When writing data, if you don't actually want to write the data but want to execute it, use `df.write.format("noop")`. The "noop" command will not write the data, e.g., to S3.
 
-
+---
 ### Q. Explain the key features of Spark and how PySpark leverages them.
 
 -  Distributed Processing:
@@ -142,7 +161,7 @@ When writing data, if you don't actually want to write the data but want to exec
 - Support for Various Languages: Spark supports multiple programming languages such as Scala, Java, Python, and R. 
   This means you can write Spark applications in the language you are most comfortable with.
 
-
+---
 ### Q.  What is an RDD? What are transformations and actions in Spark?
 
 An RDD, or Resilient Distributed Dataset, is the fundamental data structure of Apache Spark and PySpark. 
@@ -166,6 +185,7 @@ There are two types of operations in Spark that can be performed on RDDs:
   Actions trigger the execution using lineage graph to load the data into original RDD and carry out all intermediate transformations. 
   Examples of actions include _count_, _collect_, _first_, _take_, etc.
 
+---
 ### Q. How does PySpark handle distributed data processing?
 
 PySpark handles distributed data processing through the use of Resilient Distributed Datasets (RDDs) and DataFrames, which are two core data structures in Spark.
@@ -240,7 +260,7 @@ rdd.persist(StorageLevel.DISK_ONLY)
 
 In general, you would use cache() when you want to use the default storage level(MEMORY_AND_DISK), and persist(storageLevel) when you want to specify a particular storage level.
 
-
+---
 ### Q. Explain the use of broadcast variables in PySpark.
 
 In PySpark, broadcast variables are read-only variables that are cached on each node of the Spark cluster instead of sending a copy of the variable with tasks. 
@@ -317,53 +337,167 @@ print(accum.value)  # Output: 15
 Remember, accumulators have limitations. 
 If a function with an accumulator is used in a transformation and the transformation is re-evaluated, the accumulator might end up being incremented twice. 
 For this reason, it's recommended to use accumulators inside actions only.
+---
 
-### Q.  What are the performance considerations you keep in mind while working with PySpark?
+### Q. What is Data Skew? What is Salting technique to avoid data skew?
 
-Working with PySpark involves processing large datasets distributed across a cluster. 
-Therefore, it's important to consider certain performance aspects to ensure your application runs efficiently and effectively. 
-Here are some key performance considerations:
+Data skewing refers to the uneven distribution of data across different partitions or nodes in a cluster.
+This situation often arises when a significant amount of data is associated with one or a few keys in the dataset. 
+When data is skewed, some nodes (executors in Spark) do more work than others, leading to inefficiencies and delays as some nodes will be idle waiting for the busy nodes to finish processing.
 
--  Minimize Data Shuffling:
-   Data shuffling can be expensive in terms of both time and resources, as it involves redistributing data across partitions or even across nodes.
-   Operations like groupByKey can cause data shuffling. Try to use operations that minimize shuffling, like reduceByKey or aggregateByKey.
+For example, consider a dataset of customer transactions where most transactions are associated with a few popular products, while many other products have few transactions. 
+If you were to perform a groupBy operation on the product ID, the nodes responsible for the popular products would have much more work than those responsible for the less popular products.
 
+Here's how data skew can affect operations in a distributed system like Apache Spark:
 
--  Use Broadcast Variables:
-   If you're working with a small DataFrame that's used across multiple stages, you should broadcast it.
-   Broadcasting sends a read-only variable to all worker nodes once instead of multiple times, saving on network bandwidth and time.
-
-
--  Use Accumulators for Global Aggregations:
-   If you need to perform a global sum or count, use accumulators.
-   They provide a way to update a variable in parallel while executing tasks across multiple nodes.
+- **Joins:** 
+    When joining two datasets, if one key is overly represented, the task handling that key can take significantly longer to run than others, causing a bottleneck.
 
 
--  Persist/Cache Intermediate Data:
-   If an RDD or DataFrame is going to be reused multiple times, consider persisting or caching it.
-   This stores the intermediate data in memory or disk so it doesn't need to be recomputed each time it's accessed.
+- **Aggregations:**
+    When aggregating data by key, a skewed distribution can lead to some tasks being much more computationally intensive than others due to the larger amount of data they handle.
 
 
--  Avoid Using Python UDFs:
-   PySpark runs on the JVM and Python UDFs need to be executed through Py4J, which can be slow.
-   If possible, use Spark's built-in functions or write your UDFs in Scala or Java.
+- **Partitions:**
+    Spark partitions data across nodes, and operations are parallelized across these partitions. 
+    If the data is skewed, some partitions will be much larger than others, leading to an imbalance in the workload and inefficient resource utilization.
 
 
--  Choose the Correct Data Structures:
-   Use DataFrames or Datasets instead of RDDs where possible.
-   The Catalyst Optimizer can optimize DataFrame and Dataset operations but not RDD operations.
+Salting is a technique used to improve the distribution of data when you are performing operations that can lead to skewed processing in distributed systems,
+it involves adding a random component to the keys of your data so that when you perform a join, groupBy, or any other operation that involves shuffling data across nodes, the data is more evenly distributed.
+
+Let's illustrate this with an example. 
+
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, concat, lit
+
+spark = SparkSession.builder.master("local").appName("Salting Example").getOrCreate()
+
+# A small DataFrame to join with the skewed DataFrame
+small_df = spark.createDataFrame(
+    [(1, "A"),
+     (2, "B"),
+     (3, "C")],
+    ["id", "value"]
+)
+
+# Create an example of a skewed DataFrame
+skewed_df = spark.createDataFrame(
+    [(1, "foo")] * 10000 +   # Many records with key '1'
+    [(2, "bar")] * 10 +      # Few records with key '2'
+    [(3, "baz")] * 5,        # Few records with key '3'
+    ["id", "text"]
+)
+
+skewed_df.groupBy("id").count().show()
+
+# Output before salting will show the uneven distribution:
+# +---+-----+
+# | id|count|
+# +---+-----+
+# |  1|10000|
+# |  2|   10|
+# |  3|    5|
+# +---+-----+
+
+# Add a Salt to the Keys: We will append a random integer to the keys of the skewed DataFrame.
+# Number of salts or random keys to use
+num_salts = 4
+
+# Salting the skewed DataFrame by duplicating its entries, each time with a different salt value
+salted_skewed_df = (
+    skewed_df.crossJoin(spark.range(num_salts).toDF("salt"))
+        .withColumn("salted_id", concat(col("id"), lit("_"), col("salt")))
+        .drop("salt")
+    )
+
+salted_skewed_df.show()
+# +---+----+---------+
+# | id|text|salted_id|
+# +---+----+---------+
+# |  1| foo|      1_0|
+# |  1| foo|      1_1|
+# |  1| foo|      1_2|
+# |  1| foo|      1_3|
+# |  1| foo|      1_0|
+# |  1| foo|      1_1|
+# |  1| foo|      1_2|
+# |  1| foo|      1_3|
+# |  1| foo|      1_0|
+# |  1| foo|      1_1|
+# |  1| foo|      1_2|
+# |  1| foo|      1_3|
+# |  1| foo|      1_0|
+# |  1| foo|      1_1|
+# |  1| foo|      1_2|
+# |  1| foo|      1_3|
+# |  1| foo|      1_0|
+# |  1| foo|      1_1|
+# |  1| foo|      1_2|
+# |  1| foo|      1_3|
+# +---+----+---------+
+
+# Modify the Small DataFrame: Update the small DataFrame to include all possible salted keys.
+salted_small_df = (
+    small_df.crossJoin(spark.range(num_salts).toDF("salt"))
+    .withColumn("salted_id", concat(col("id"), lit("_"), col("salt")))
+    .drop("id", "salt")
+)
+
+salted_small_df.show()
+# +-----+---------+
+# |value|salted_id|
+# +-----+---------+
+# |    A|      1_0|
+# |    A|      1_1|
+# |    A|      1_2|
+# |    A|      1_3|
+# |    B|      2_0|
+# |    B|      2_1|
+# |    B|      2_2|
+# |    B|      2_3|
+# |    C|      3_0|
+# |    C|      3_1|
+# |    C|      3_2|
+# |    C|      3_3|
+# +-----+---------+
 
 
--  Partitioning:
-   Efficient partitioning can enhance the data locality of your Spark computations, and reduce the volume of data shuffled across the nodes.
-   You can repartition your data based on the data skewness or based on the operations that you plan to perform.
+# Join the DataFrames on the salted key
+joined_df = salted_skewed_df.join(salted_small_df, "salted_id")
 
+# Select the original columns (excluding the salted key)
+result_df = joined_df.select(col("id"), "text", "value")
+result_df.show()
+# +---+----+-----+
+# | id|text|value|
+# +---+----+-----+
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# |  1| foo|    A|
+# +---+----+-----+
+```
 
--  Use the right file format:
-   Different file formats and compression methods can have a great impact on performance.
-   For instance, Parquet is a columnar storage file format and is optimized for use with Spark for its superior analytic performance.
+By using salting, you spread out the large number of records with the same key across multiple keys, reducing the likelihood of a single task/node in your Spark cluster being overloaded. 
+This can significantly improve the performance of your joins and other operations that require shuffling data.
 
-
--  Tune Spark Configuration:
-   Depending on your workload, you may need to tune the configuration settings for Spark.
-   This could involve optimizing the memory usage, garbage collection, serialization, and parallelism.
+Remember to adjust the number of salts (num_salts) based on the level of skewness in your data and the resources available in your Spark cluster. 
+Too few salts will not adequately mitigate skew, while too many salts can lead to excessive shuffling and a performance penalty.
