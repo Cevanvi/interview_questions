@@ -1,12 +1,42 @@
+# SQL Interview Questions and Answers
+- [What is SQL and why is it important in the context of data engineering?](#q-what-is-sql-and-why-is-it-important-in-the-context-of-data-engineering)
+- [What is the difference between SQL and NoSQL databases?.Can you provide examples of each?](#q-what-is-the-difference-between-sql-and-nosql-databases-can-you-provide-examples-of-each)
+- [What are the different types of SQL joins? Explain each with examples](#q-what-are-the-different-types-of-sql-joins-explain-each-with-examples)
+- [How would you optimize a slow-performing SQL query?](#q-how-would-you-optimize-a-slow-performing-sql-query)
+- [How would you handle large datasets in SQL? Are there any specific techniques or tools you would use?](#q-how-would-you-handle-large-datasets-in-sql-are-there-any-specific-techniques-or-tools-you-would-use)
+- [What's the difference between table and Materialized Views?](#materialized-view-)
+- [Why don't insert the query result to a table instead of creating Materialized view?](#query-complexity-and-performance-)
+- [What is the purpose of indexes in a database? When and how would you use them?](#q-what-is-the-purpose-of-indexes-in-a-database-when-and-how-would-you-use-them)
+- [What is a primary key and a foreign key in SQL? How are they related?](#q-what-is-a-primary-key-and-a-foreign-key-in-sql-how-are-they-related)
+- [What's the difference between B-tree, hash, and bitmap indexes](#b-tree-index-)
+- [How would you handle duplicate records in a SQL query result?](#q-how-would-you-handle-duplicate-records-in-a-sql-query-result)
+- [What is the purpose of the GROUP BY clause in SQL? Give an example.](#q-what-is-the-purpose-of-the-group-by-clause-in-sql-give-an-example)
+- [What are some common aggregate functions in SQL? Provide examples of each.](#-q-what-arein-sql?h.)
+- [How would you handle NULL values in aamazon SQL query?](#)
+- [What's the difference between OLAP and OLTP databases?]()
+- [Explain the concept of ACID properties in the context of database transactions.](#q-explain-the-concept-of-acid-properties-in-the-context-of-database-transactions)
+- [What Is CAP Theorem ?](#q-what-is-cap-theorem)
+- [What are C, A and P in CAP and the difference between them?](#q-what-are-c-a-and-p-in-cap-and-the-difference-between-them)
+- [What Is PACELC Theorem ?](#q-what-is-pacelc-theorem)
+
+
 ## Q. What is SQL and why is it important in the context of data engineering?
 SQL stands for Structured Query Language and is a programming language used for managing and manipulating relational databases.
 It is important in data engineering because it allows us to interact with databases, perform data extraction, transformation, and loading (ETL) processes, and query and analyze data efficiently.
+
+[back to top](#SQL-Interview-Questions-and-Answers)
+
+---
 ## Q. What is the difference between SQL and NoSQL databases? Can you provide examples of each?
 SQL databases are relational databases that store data in tables with predefined schemas, and they use SQL for querying and managing data.
 Examples of SQL databases include MySQL, PostgreSQL, and Oracle.
 NoSQL databases, on the other hand, are non-relational databases that store data in various formats like key-value pairs, documents, graphs, or columnar structures.
 They typically provide flexible schemas and scale horizontally. 
 Examples of NoSQL databases include MongoDB, Cassandra, and Redis.
+
+[back to top](#SQL-Interview-Questions-and-Answers)
+
+---
 ## Q. What are the different types of SQL joins? Explain each with examples
 ### (INNER) JOIN:
 An INNER JOIN returns only the matching rows from both tables based on the join condition.
@@ -105,14 +135,16 @@ SELECT Customers.CustomerName, Orders.OrderID
 FROM Customers
 JOIN Orders USING (CustomerID);
 ```
+---
 ## Q. How would you optimize a slow-performing SQL query?
 There are several approaches to optimize a slow-performing SQL query, such as:
 
-* Ensuring appropriate indexing on the columns involved in the query.
-* Breaking down complex queries into smaller, simpler ones.
-* Using query optimization techniques like rewriting the query, adding hints, or using query plans.
-* Analyzing and optimizing the database schema and table design.
-* Caching frequently accessed or computationally expensive query results.
+- Ensuring appropriate indexing on the columns involved in the query.
+- Breaking down complex queries into smaller, simpler ones.
+- Using query optimization techniques like rewriting the query, adding hints, or using query plans.
+- Analyzing and optimizing the database schema and table design.
+- Caching frequently accessed or computationally expensive query results.
+---
 ## Q. How would you handle large datasets in SQL? Are there any specific techniques or tools you would use?
 Handling large datasets in SQL requires consideration of performance, scalability, and optimization techniques.
 Here are some approaches and techniques to handle large datasets in SQL:
@@ -148,6 +180,7 @@ Archiving or purging old or unused data helps reduce the overall dataset size, i
 ### Hardware Considerations:
 Optimize the database server hardware, such as memory, disk I/O, and CPU, to handle large datasets efficiently.
 Use high-performance storage solutions, such as solid-state drives (SSDs), to improve disk I/O performance.
+---
 ## Q. What's the difference between table and Materialized Views?
 The main difference between a table and a materialized view lies in how they store and maintain data.
 ### Table:
@@ -171,6 +204,7 @@ Materialized views are primarily used for improving query performance, while tab
 
 It's worth mentioning that materialized views are not supported in all database systems, and their specific behavior and usage may vary across different database platforms. 
 It's important to consult the documentation of your specific database system for detailed information on materialized views and their implementation.
+---
 ## Q. Why don't insert the query result to a table instead of creating Materialized view?
 There are a few reasons why you might choose to create a materialized view instead of inserting the query result into a table:
 ### Query Complexity and Performance:
@@ -190,6 +224,7 @@ Materialized views can be used to control access to specific summarized or aggre
 By creating a materialized view with limited columns or aggregated data, you can restrict access to sensitive information while still providing necessary insights.
 Inserting query results into a table may expose the underlying raw data, which may not be desirable from a security standpoint.
 While inserting query results into a table is a valid approach in many scenarios, materialized views offer additional benefits in terms of query performance, data consistency, storage efficiency, and data security. 
+---
 ## Q. What is the purpose of indexes in a database? When and how would you use them?
 Indexes in a database serve the purpose of improving query performance by allowing faster data retrieval. 
 They are data structures associated with database tables that provide efficient access to specific data based on the values in one or more columns. Here are some key points about the purpose and usage of indexes:
@@ -227,6 +262,7 @@ Also, keep indexes maintained by rebuilding or reorganizing them periodically to
 
 It's important to note that excessive or unnecessary indexes can have negative impacts on database performance, as they require additional storage space and increase the overhead of data modifications. 
 It's crucial to strike a balance and only create indexes where they are truly beneficial based on the query workload and access patterns in your database.
+---
 ## Q. What is a primary key and a foreign key in SQL? How are they related?
 In SQL, a primary key and a foreign key are two types of constraints used to establish relationships between tables in a relational database. 
 They play a crucial role in maintaining data integrity and enforcing referential integrity rules. 
@@ -272,6 +308,7 @@ In the example given above, the "CustomerID" column in the "Orders" table is a f
 
 In summary, a primary key uniquely identifies each row in a table, while a foreign key establishes a relationship between two tables by referencing the primary key of another table. 
 The primary key is the source of the reference, and the foreign key is the target that points back to the primary key. 
+---
 ## Q. What's the difference between B-tree, hash, and bitmap indexes 
 ### B-tree Index:
 * B-tree (Balanced Tree) is a commonly used indexing structure that organizes data in a balanced tree-like structure.
@@ -337,6 +374,7 @@ SELECT column1, column2
 FROM cte
 WHERE row_num = 1;
 ```
+---
 ## Q. What is the purpose of the GROUP BY clause in SQL? Give an example.
 The GROUP BY clause in SQL is used to group rows based on one or more columns. 
 It is typically used in combination with aggregate functions to perform calculations on groups of data rather than individual rows. 
@@ -373,6 +411,7 @@ In this example, the GROUP BY clause groups the rows by unique "CustomerID" valu
 The SUM() function then calculates the total quantity of products ordered by each customer. 
 The resulting query output provides a summary result, showing the total quantity for each customer based on the grouping.
 The GROUP BY clause is not limited to a single column. You can group by multiple columns to create more granular groups within the data. Additionally, you can use other aggregate functions like COUNT(), AVG(), MAX(), MIN(), etc., to obtain different summary results based on the grouped data.
+---
 ## Q. What are some common aggregate functions in SQL? Provide examples of each.
 ### COUNT():
 Returns the number of rows in a group or the total number of rows in a table.
@@ -433,6 +472,7 @@ FROM Orders
 GROUP BY CustomerID
 HAVING SUM(Quantity) > 10;
 ```
+---
 ## Q. How would you handle NULL values in a SQL query?
 Handling NULL values in a SQL query requires consideration of how you want to treat those NULL values based on the desired outcome. 
 Here are some common approaches to handle NULL values in a SQL query:
@@ -444,8 +484,9 @@ Example:
 SELECT column1, column2
 FROM table_name
 WHERE column1 IS NOT NULL;
-Handling NULL with IFNULL or COALESCE:
 ```
+Handling NULL with IFNULL or COALESCE:
+
 ### IFNULL() or COALESCE():
 Use the IFNULL() or COALESCE() function to replace NULL values with a specific value or expression.
 
@@ -474,6 +515,7 @@ FROM table_name;
 ```
 It's important to handle NULL values appropriately based on the desired outcome and the specific context of your query. 
 You can use filtering, replacement functions, or conditional logic to handle NULL values effectively and ensure accurate query results.
+---
 ## Q. What's the difference between OLAP and OLTP databases?
 OLAP (Online Analytical Processing) and OLTP (Online Transaction Processing) are two types of database systems that serve different purposes in handling data.
 Here are the key differences between OLAP and OLTP databases:
@@ -506,6 +548,7 @@ Here are the key differences between OLAP and OLTP databases:
 * OLTP databases handle concurrent transactions, ensuring data integrity and managing concurrent access, while OLAP databases may have fewer concurrency requirements as they focus on analytical processing.
 ###  Database Size: 
 * OLTP databases tend to have smaller database sizes due to the frequent transactional updates, while OLAP databases can handle much larger data volumes for historical or consolidated analysis.
+---
 ## Q. Explain the concept of ACID properties in the context of database transactions.
 ACID is an acronym that stands for Atomicity, Consistency, Isolation, and Durability. These properties ensure the reliability and integrity of database transactions. Let's explore each of these properties in the context of database transactions:
 ### Atomicity: 
@@ -557,13 +600,14 @@ maintaining data consistency.
 
 **Durability** ensures that the reservation remains intact even if there is a power outage or database failure, 
 allowing the customer to access the reserved room upon arrival.
-
-## Q. What Is CAP Theorem ?
+---
+## Q. What Is CAP Theorem?
 The CAP acronym of: Consistency & Availability & Partition.
 The CAP Theorem says that it is impossible to build an implementation of read-write storage/system in an asynchronous network that satisfies all of the following three properties:
 * Consistency (all nodes see the same data even at the same time with concurrent updates )
 * Availability (a guarantee that every request receives a response about whether it was successful or failed)
 * Partition tolerance (the system continues to operate despite arbitrary message loss or failure of part of the system)
+---
 ## Q. What are C, A and P in CAP and the difference between them?
 * Consistency means that data is the same across the cluster, so you can read or write from/to any node and get the same data.
 * Availability means the ability to access the cluster even if a node in the cluster goes down.
@@ -571,7 +615,11 @@ The CAP Theorem says that it is impossible to build an implementation of read-wr
 
 If you have both **availability** (the cluster doesn't go down) and **partition tolerance** (the database can survive nodes being unable to communicate), then you can't guarantee that all nodes will always have all the data (**consistency**), 
 because nodes are up and accepting writes, but can't communicate those writes to each other.
-## Q. What Is PACELC Theorem ?
+
+[back to top](#SQL-Interview-Questions-and-Answers)
+
+---
+## Q. What Is PACELC Theorem?
 The PACELC theorem is an extension of the CAP theorem that introduces the concept of latency and trade-offs in distributed systems. 
 It takes into account the behavior of distributed systems during network partitions, emphasizing the role of latency in decision-making.
 PACELC stands for:
@@ -598,3 +646,5 @@ It recognizes that during a partition, a system can choose to prioritize either 
 The PACELC theorem acknowledges that in distributed systems, there is a fundamental trade-off between providing strong consistency and high availability, particularly during network partitions. 
 It highlights the importance of considering latency as a factor in decision-making, as achieving strong consistency across a distributed system may introduce higher latency or compromise availability. 
 Different systems and use cases may prioritize different aspects of the PACELC theorem based on their specific requirements and desired trade-offs.
+
+[back to top](#SQL-Interview-Questions-and-Answers)
